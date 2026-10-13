@@ -11,3 +11,4 @@ app.use(PrimeVue, {
   },
   license: import.meta.env.VITE_PRIME_VUE_LICENSE,
 });
+app.mount("#app");
