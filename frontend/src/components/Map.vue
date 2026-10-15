@@ -2,14 +2,15 @@
 import { onMounted } from "vue";
 
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L, { type LatLngExpression } from "leaflet";
 
 // ! https://wiki.openstreetmap.org/wiki/DE:OpenStreetMap_benutzen (Lizenz und Sicherheitshinweis)
+const HAMBURG_CENTER: LatLngExpression = [53.551086, 9.993682];
 
 onMounted(() => {
   const map = L.map("map", {
-    center: [51.505, -0.09],
-    zoom: 10,
+    center: HAMBURG_CENTER,
+    zoom: 12,
   });
 
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
