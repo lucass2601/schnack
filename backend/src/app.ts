@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapiSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
 import placesRoutes from "./routes/placesRoutes.ts";
 app.use("/api/places", placesRoutes);
