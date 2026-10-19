@@ -7,6 +7,7 @@ const options = {
       title: "schnack Backend API",
       version: "0.0.1",
     },
+    servers: [{ url: "/api" }],
   },
   apis: ["./src/routes/*Routes.ts"], // files containing annotations as above
 };

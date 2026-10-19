@@ -3,7 +3,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * /:
+ * /places:
  *   get:
  *     tags: [Places]
  *     description: Gets all the places
