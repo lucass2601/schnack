@@ -14,5 +14,5 @@ import placesRoutes from "./routes/placesRoutes.ts";
 app.use("/api/places", placesRoutes);
 
 app.listen(port, () => {
-  console.log(`Example App listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });
