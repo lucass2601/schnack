@@ -1,12 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import * as placesService from "../services/placesService.ts";
 
-export const getPlaces = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const getPlaces = async (_req: Request, res: Response) => {
   const places = await placesService.findAllPlaces();
-
-  res.json(places);
+  res.status(200).json({ places });
 };
