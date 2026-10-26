@@ -35,29 +35,38 @@ const markers = shallowRef<MarkerClusterGroup>(
   }),
 );
 
+interface markerIdMapInterface {
+  placeId: Place["id"];
+  marker: CircleMarker;
+}
+
+const markerIdMap = shallowRef<markerIdMapInterface[]>([]);
+
 const selectedPlaceId = computed<Place["id"] | null>(() => {
   if (!route.query.place) return null;
 
   return route.query.place.toString();
 });
 
-const selectPlace = (
-  placeId: Place["id"],
-  placeLat: Place["lat"],
-  placeLon: Place["lon"],
-) => {
+const selectPlace = (placeId: Place["id"]) => {
   if (!placeId) return;
 
-  const placeLatLng: LatLngExpression = [placeLat, placeLon];
-  const selectedPlaceMarker: CircleMarker = L.circleMarker(placeLatLng);
-  markers.value.addLayer(selectedPlaceMarker);
-  markers.value.zoomToShowLayer(selectedPlaceMarker);
+  const findMarkerObj = markerIdMap.value.find(
+    (marker) => marker.placeId === placeId,
+  );
 
-  if (!placeId || selectedPlaceId.value === placeId) return;
+  if (!findMarkerObj) return;
+  const marker: CircleMarker = findMarkerObj?.marker;
+  if (marker instanceof CircleMarker)
+    markers.value.zoomToShowLayer(marker, () => {
+      map.value?.panTo(marker.getLatLng());
+    });
+
+  if (selectedPlaceId.value === placeId) return;
   router.push({ query: { place: placeId } });
 };
 
-const fetchPlaces = async () => {
+const getPlaces = async () => {
   await api
     .get("/places")
     .then(({ data }) => {
@@ -65,12 +74,10 @@ const fetchPlaces = async () => {
 
       const markerArray = places.value.map((place) => {
         let marker = L.circleMarker([place.lat, place.lon]);
-        marker.addEventListener("click", () =>
-          selectPlace(place.id, place.lat, place.lon),
-        );
+        markerIdMap.value.push({ placeId: place.id, marker });
+        marker.addEventListener("click", () => selectPlace(place.id));
         return marker;
       });
-
       if (map.value) {
         markers.value.addLayers(markerArray);
         map.value.addLayer(markers.value);
@@ -85,7 +92,7 @@ onMounted(async () => {
   map.value = L.map("map", {
     center: HAMBURG_CENTER,
     zoom: 12,
-    zoomControl: true,
+    zoomControl: false,
     zoomAnimation: false,
     fadeAnimation: true,
     markerZoomAnimation: true,
@@ -96,15 +103,14 @@ onMounted(async () => {
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map.value);
 
-  await fetchPlaces();
+  await getPlaces();
 
   if (selectedPlaceId.value) {
     const selectedPlace = places.value.find(
       (place) => place.id === selectedPlaceId.value,
     );
 
-    if (selectedPlace)
-      selectPlace(selectedPlace.id, selectedPlace.lat, selectedPlace.lon);
+    if (selectedPlace) selectPlace(selectedPlace.id);
   }
 });
 </script>
