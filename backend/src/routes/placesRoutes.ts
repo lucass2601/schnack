@@ -6,14 +6,29 @@ const router = express.Router();
  * /places:
  *   get:
  *     tags: [Places]
- *     description: Gets all the places
+ *     summary: Get all places
  *     responses:
  *       200:
  *         description: Returns a places array
+ * /places/{placeId}:
+ *   get:
+ *     tags: [Places]
+ *     summary: Get a place by ID
+ *     parameters:
+ *      - in: path
+ *        name: placeId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: ID of the place
+ *     responses:
+ *       200:
+ *         description: Returns a place object
  */
 
-import { getPlaces } from "../controllers/placesController.ts";
+import { getPlaces, getPlace } from "../controllers/placesController.ts";
 
 router.get("/", getPlaces);
+router.get("/:placeId", getPlace);
 
 export default router;
