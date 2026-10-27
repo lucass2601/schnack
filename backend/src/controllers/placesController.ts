@@ -15,6 +15,6 @@ export const getPlace = async (
 ) => {
   const { placeId } = req.params;
 
-  const place = await placesService.findPlace(placeId);
+  const [place] = await placesService.findPlace(placeId);
   res.status(200).json({ place });
 };
