@@ -6,6 +6,7 @@ import L, {
   type LatLngExpression,
   MarkerClusterGroup,
   CircleMarker,
+  control,
 } from "leaflet";
 import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet.markercluster/dist/MarkerCluster.css";
@@ -97,6 +98,8 @@ onMounted(async () => {
     fadeAnimation: true,
     markerZoomAnimation: true,
   });
+
+  map.value.addControl(control.zoom({ position: "topright" }));
 
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
