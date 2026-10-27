@@ -59,7 +59,11 @@ watch(
 
 <template>
   <Map />
-  <Modal v-if="hasRoute" @modalClose="dismissPlace">
+  <Modal
+    v-if="hasRoute && selectedPlace"
+    @modalClose="dismissPlace"
+    :title="selectedPlace.name"
+  >
     <PlaceDetails v-if="selectedPlace" :place="selectedPlace" />
   </Modal>
 </template>
