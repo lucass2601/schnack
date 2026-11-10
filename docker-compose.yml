@@ -1,0 +1,29 @@
+services:
+  database:
+    image: "postgres:16"
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    env_file:
+     - .env 
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+  api:
+    build: ./backend
+    container_name: schnack-api
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASSWORD}@database:5432/${DB_NAME}
+    depends_on:
+      - database
+  client:
+    build: ./client
+    container_name: schnack-client
+    ports:
+      - 8080:8080
+    depends_on:
+      - api
